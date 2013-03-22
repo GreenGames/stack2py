@@ -1,0 +1,97 @@
+/access-tokens/{accessTokens}            : Allows an application to inspect access_tokens it has, useful for debugging.
+/access-tokens/{accessTokens}/invalidate : Allows an application to dispose of access_tokens when it is done with them.
+/answers                                 : Get all answers on the site.
+/answers/{ids}                           : Get answers identified by a set of ids.
+/answers/{ids}/comments                  : Get comments on the answers identified by a set of ids.
+/apps/{accessTokens}/de-authenticate     : Allows an application to de-authorize itself for a set of users.
+/badges                                  : Get all badges on the site, in alphabetical order.
+/badges/name                             : Get all non-tagged-based badges in alphabetical order.
+/badges/recipients                       : Get badges recently awarded on the site.
+/badges/tags                             : Get all tagged-based badges in alphabetical order.
+/badges/{ids}                            : Get the badges identified by ids.
+/badges/{ids}/recipients                 : Get the recent recipients of the given badges.
+/comments                                : Get all comments on the site.
+/comments/{ids}                          : Get comments identified by a set of ids.
+/errors                                  : Get descriptions of all the errors that the API could return.
+/errors/{id}                             : Simulate an API error for testing purposes.
+/filters/create                          : Create a new filter.
+/filters/{filters}                       : Decode a set of filters, useful for debugging purposes.
+/info                                    : Get information about the entire site.
+/posts                                   : Get all posts (questions and answers) in the system.
+/posts/{ids}                             : Get all posts identified by a set of ids.  Useful for when the type of post (question or answer) is not known.
+/posts/{ids}/comments                    : Get comments on the posts (question or answer) identified by a set of ids.
+/posts/{ids}/revisions                   : Get revisions on the set of posts in ids.
+/posts/{ids}/suggested-edits             : Get suggested edits on the set of posts in ids.
+/privileges                              : Get all the privileges available on the site.
+/questions                               : Get all questions on the site.
+/questions/featured                      : Get all questions on the site with active bounties.
+/questions/no-answers                    : Get all questions on the site with no answers.
+/questions/unanswered                    : Get all questions the site considers unanswered.
+/questions/{ids}                         : Get the questions identified by a set of ids.
+/questions/{ids}/answers                 : Get the answers to the questions identified by a set of ids.
+/questions/{ids}/comments                : Get the comments on the questions identified by a set of ids.
+/questions/{ids}/linked                  : Get the questions that link to the questions identified by a set of ids.
+/questions/{ids}/related                 : Get the questions that are related to the questions identified by a set of ids.
+/questions/{ids}/timeline                : Get the timelines of the questions identified by a set of ids.
+/revisions/{ids}                         : Get all revisions identified by a set of ids.
+/search                                  : Search the site for questions meeting certain criteria.
+/search/advanced                         : Search the site for questions using most of the on-site search options.
+/similar                                 : Search the site based on similarity to a title.
+/sites                                   : Get all the sites in the Stack Exchange network.
+/suggested-edits                         : Get all the suggested edits on the site.
+/suggested-edits/{ids}                   : Get the suggested edits identified by a set of ids.
+/tags                                    : Get the tags on the site.
+/tags/moderator-only                     : Get the tags on the site that only moderators can use.
+/tags/required                           : Get the tags on the site that fulfill required tag constraints.
+/tags/synonyms                           : Get all the tag synonyms on the site.
+/tags/{tags}/faq                         : Get frequently asked questions in a set of tags.
+/tags/{tags}/info                        : Get tags on the site by their names.
+/tags/{tags}/related                     : Get related tags, based on common tag pairings.
+/tags/{tags}/synonyms                    : Get the synonyms for a specific set of tags.
+/tags/{tags}/wikis                       : Get the wiki entries for a set of tags.
+/tags/{tag}/top-answerers/{period}       : Get the top answer posters in a specific tag, either in the last month or for all time.
+/tags/{tag}/top-askers/{period}          : Get the top question askers in a specific tag, either in the last month or for all time.
+/users                                   : Get all users on the site.
+/users/moderators                        : Get the users who have moderation powers on the site.
+/users/moderators/elected                : Get the users who are active moderators who have also won a moderator election.
+/users/{ids}                             : Get the users identified by a set of ids.
+/users/{ids}/answers                     : Get the answers posted by the users identified by a set of ids.
+/users/{ids}/associated                  : Get a user's associated accounts.
+/users/{ids}/badges                      : Get the badges earned by the users identified by a set of ids.
+/users/{ids}/comments                    : Get the comments posted by the users identified by a set of ids.
+/users/{ids}/comments/{toid}             : Get the comments posted by a set of users in reply to another user.
+/users/{ids}/favorites                   : Get the questions favorited by users identified by a set of ids.
+/users/{ids}/mentioned                   : Get the comments that mention one of the users identified by a set of ids.
+/users/{ids}/merges                      : Get the merges a user's accounts has undergone.
+/users/{ids}/questions                   : Get the questions asked by the users identified by a set of ids.
+/users/{ids}/questions/featured          : Get the questions on which a set of users, have active bounties.
+/users/{ids}/questions/no-answers        : Get the questions asked by a set of users, which have no answers.
+/users/{ids}/questions/unaccepted        : Get the questions asked by a set of users, which have at least one answer but no accepted answer.
+/users/{ids}/questions/unanswered        : Get the questions asked by a set of users, which are not considered to be adequately answered.
+/users/{ids}/reputation                  : Get a subset of the reputation changes experienced by the users identified by a set of ids.
+/users/{ids}/reputation-history          : Get a history of a user's reputation, excluding private events.
+/users/{ids}/suggested-edits             : Get the suggested edits provided by users identified by a set of ids.
+/users/{ids}/tags                        : Get the tags that the users (identified by a set of ids) have been active in.
+/users/{ids}/timeline                    : Get a subset of the actions of that have been taken by the users identified by a set of ids.
+/users/{ids}/write-permissions           : Get the write access a user has via the API.
+/users/{id}/notifications                : Get a user's notifications.
+/users/{id}/notifications/unread         : Get a user's unread notifications.
+/users/{id}/privileges                   : Get the privileges the given user has on the site.
+/users/{id}/tags/{tags}/top-answers      : Get the top answers a user has posted on questions with a set of tags.
+/users/{id}/tags/{tags}/top-questions    : Get the top questions a user has posted with a set of tags.
+/users/{id}/top-answer-tags              : Get the top tags (by score) a single user has posted answers in.
+/users/{id}/top-question-tags            : Get the top tags (by score) a single user has asked questions in.
+
+Authentication
+--------------
+/posts/{id}/comments/add                 : Create a new comment on the post identified by id.
+/notifications                           : Get a user's notifications, outside of the context of a site.
+/users/{id}/inbox/unread                 : Get the unread items in a user's inbox.
+/comments/{id}/edit                      : Edit a comment identified by it's id.
+/events                                  : Get recent events that have occurred on the site. Effectively a stream of new users and content.
+/inbox/unread                            : Get the unread items in a user's inbox, outside of the context of a site.
+/comments/{id}/delete                    : Delete a comment identified by it's id.
+/users/{id}/inbox                        : Get a user's inbox.
+/notifications/unread                    : Get a user's unread notifications, outside of the context of a site.
+/users/{ids}/reputation-history/full     : Get a full history of a user's reputation.
+/inbox                                   : Get a user's inbox, outside of the context of a site.
