@@ -176,5 +176,3 @@ class Tag(Base):
     def __init__(self, uid, site):
         Base.__init__(self, uid, site)
         self.link = api_url+'tags/'+str(self.uid)
-
-make_auth_proxy({'http':'http://prinkv:prinkv@123@netmon.iitb.ac.in:80'})
