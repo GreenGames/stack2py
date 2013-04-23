@@ -4,7 +4,7 @@ import json
 import pprint, webbrowser
 from urllib import urlencode
 
-__version__ = "a0.1r3"
+__version__ = "0.1r3"
 api_url = 'http://api.stackexchange.com/2.1/'
 auth_url = 'https://stackexchange.com/oauth/dialog'
 
@@ -117,6 +117,16 @@ class Post(Base):
             user = User(None,self.site)
             user.get_info(self.owner)
             self.owner = user
+            
+    def get_comments(self):
+        '''Load comments into the class'''
+        url = make_url(self.link+'/comments',
+                       site=self.site,filter='withbody')
+        dic = get_dict(url)
+        for comment in dic['items']:
+            c = Comment(comment['comment_id'],self.site)
+            c.get_info(comment)
+            self.comments.append(c)
 
 class User(Base):
     '''User on SE site'''
@@ -141,15 +151,6 @@ class Question(Post):
             a.get_info(answer)
             self.answers.append(a)
 
-    def get_comments(self):
-        '''Load comments into the class'''
-        url = make_url(self.link+'/comments',
-                       site=self.site,filter='withbody')
-        dic = get_dict(url)
-        for comment in dic['items']:
-            c = Comment(comment['comment_id'],self.site)
-            c.get_info(comment)
-            self.comments.append(c)
 
 class Answer(Post):
     '''Answer on SE site'''
@@ -157,15 +158,6 @@ class Answer(Post):
         Post.__init__(self, uid, site)
         self.link = api_url+'answers/'+str(self.uid)
 
-    def get_comments(self):
-        '''Load comments into the class'''
-        url = make_url(self.link+'/comments',
-                       site=self.site,filter='withbody')
-        dic = get_dict(url)
-        for comment in dic['items']:
-            c = Comment(comment['comment_id'],self.site)
-            c.get_info(comment)
-            self.comments.append(c)
 
 class Comment(Base):
     '''Comment on SE site'''
@@ -185,3 +177,4 @@ class Tag(Base):
         Base.__init__(self, uid, site)
         self.link = api_url+'tags/'+str(self.uid)
 
+make_auth_proxy({'http':'http://prinkv:prinkv@123@netmon.iitb.ac.in:80'})
