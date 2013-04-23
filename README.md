@@ -10,3 +10,15 @@ This library works with the new v2.1 API. Although currently it is incomplete (a
   -  Be "Pythonic"
   -  Give the user control over the network connections
   -  Be complete 
+
+Example:  
+
+  1.  Get recently active questions on stackoverflow
+
+    ```python
+    >>> import stack2py
+    >>> so = stack2py.Site('stackoverflow')
+    >>> so.get_questions()
+    >>> so.questions # the list of questions
+    [Question.....ion ID : 4214385]
+    ```
