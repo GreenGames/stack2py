@@ -29,7 +29,8 @@ def make_url(base,kargs={},**kwargs):
 
 def get_dict(url):
     '''Returns the dictionary of the response from url'''
-    return json.loads(zlib.decompress(urllib2.urlopen(url).read(), 15 + 32))
+    data = urllib2.urlopen(url).read()
+    return json.loads(zlib.decompress(data, 15 + 32))
 
 def get_sites():
     '''Returns the name:api site name of all sites on SE'''
@@ -51,9 +52,10 @@ def authenticate():
 
 class Base:
     """ The base class for all the other classes """
-    def __init__(self, uid, site):
+    def __init__(self, uid, site, link):
         self.uid = uid
         self.site = site
+        self.api_link = link
     def __repr__(self):
         return "{0} ID: {1}".format(self.__class__.__name__, self.uid)
 
@@ -62,9 +64,8 @@ class Base:
             setattr(self,key,dic[key])
 
     def get_info(self,*args,**kwargs):
-        '''Get Information about the Post'''
         if not args:
-            url = make_url(self.link, kargs=kwargs,site=self.site)
+            url = make_url(self.api_link, kargs=kwargs,site=self.site)
             print url
             dic = get_dict(url)
             self.set_args(dic['items'][0])
@@ -80,16 +81,15 @@ class Base:
             raise AttributeError('Invalid arguments')
 
 class Site(Base):
-    '''A site on SE '''
     def __init__(self,site):
         self.site = site
         self.questions = []
-        self.link = api_url+'info'
+        self.api_link = api_url+'info'
+
     def __repr__(self):
         return 'Site: '+ self.site
 
     def get_questions(self,**kwargs):
-        '''Loads questions into the class'''
         url = make_url(api_url+'questions',kargs=kwargs,
                        site=self.site,filter='withbody')
         dic = get_dict(url)
@@ -100,12 +100,11 @@ class Site(Base):
 
 class Post(Base):
     """ A post (Question Or Answer) """
-    def __init__(self, uid, site):
-        Base.__init__(self, uid, site)
+    def __init__(self, uid, site, link):
+        Base.__init__(self, uid, site, link)
         self.comments = []
 
     def set_args(self, dic):
-        """ Set attributes from dict """
         for key in dic:
             setattr(self,key,dic[key])
         if hasattr(self,'owner') and \
@@ -113,14 +112,9 @@ class Post(Base):
             user = User(self.owner['user_id'],self.site)
             user.get_info(self.owner)
             self.owner = user
-        else:
-            user = User(None,self.site)
-            user.get_info(self.owner)
-            self.owner = user
-            
+
     def get_comments(self):
-        '''Load comments into the class'''
-        url = make_url(self.link+'/comments',
+        url = make_url(self.api_link+'/comments',
                        site=self.site,filter='withbody')
         dic = get_dict(url)
         for comment in dic['items']:
@@ -128,22 +122,13 @@ class Post(Base):
             c.get_info(comment)
             self.comments.append(c)
 
-class User(Base):
-    '''User on SE site'''
-    def __init__(self, uid, site):
-        Base.__init__(self, uid, site)
-        self.link = api_url+'users/'+str(self.uid)
-
 class Question(Post):
-    '''A Question on SE site'''
     def __init__(self, uid, site):
-        Post.__init__(self, uid, site)
+        Post.__init__(self, uid, site, api_url+"questions/{0}".format(uid))
         self.answers = []
-        self.link = "{0}/questions/".format(self.uid)
 
     def get_answers(self):
-        '''Load answers into the class'''
-        url = make_url(self.link+'/answers',
+        url = make_url(self.api_link+'/answers',
                        site=self.site,filter='withbody')
         dic = get_dict(url)
         for answer in dic['items']:
@@ -153,26 +138,41 @@ class Question(Post):
 
 
 class Answer(Post):
-    '''Answer on SE site'''
     def __init__(self, uid, site):
-        Post.__init__(self, uid, site)
-        self.link = api_url+'answers/'+str(self.uid)
+        Post.__init__(self, uid, site, api_url+'answers/'+str(uid))
 
 
 class Comment(Base):
-    '''Comment on SE site'''
     def __init__(self, uid, site):
-        Base.__init__(self, uid, site)
-        self.link = api_url+'comments/'+str(self.uid)
-    set_args = Post.set_args
+        Base.__init__(self, uid, site, api_url+'comments/'+str(uid))
+
+    def set_args(self, dic):
+        for key in dic:
+            setattr(self,key,dic[key])
+        if hasattr(self,'owner') and \
+           self.owner['user_type'] in ('registered','moderator'):
+            user = User(self.owner['user_id'],self.site)
+            user.get_info(self.owner)
+            self.owner = user
 
 class Badge(Base):
     def __init__(self, uid, site):
-        Base.__init__(self, uid, site)
-        self.link = api_url+'badges/'+str(self.uid)
-    set_args = Post.set_args
+        Base.__init__(self, uid, site, api_url+'badges/'+str(uid))
+
+    def set_args(self, dic):
+        for key in dic:
+            setattr(self,key,dic[key])
+        if hasattr(self,'owner') and \
+           self.owner['user_type'] in ('registered','moderator'):
+            user = User(self.owner['user_id'],self.site)
+            user.get_info(self.owner)
+            self.owner = user
 
 class Tag(Base):
     def __init__(self, uid, site):
-        Base.__init__(self, uid, site)
-        self.link = api_url+'tags/'+str(self.uid)
+        Base.__init__(self, uid, site, api_url+'tags/'+str(uid))
+
+class User(Base):
+    def __init__(self, uid, site):
+        Base.__init__(self, uid, site, api_url+'users/'+str(uid))
+
